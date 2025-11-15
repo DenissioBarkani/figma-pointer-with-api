@@ -1,0 +1,24 @@
+{
+  "name": "ukazka-figma-plugin",
+  "version": "1.0.0",
+  "description": "Figma plugin for adding interactive pointer elements",
+  "main": "code.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "keywords": [
+    "figma",
+    "plugin",
+    "pointer",
+    "animation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.88.0",
+    "typescript": "^5.0.0"
+  }
+}
+
+

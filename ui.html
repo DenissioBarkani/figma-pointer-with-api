@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Указка</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 12px;
+      padding: 0px 10px;
+      padding-bottom: 6px;
+      background: #fafafa;
+      color: #1a1a1a;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+
+    h2 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .button {
+      width: 100%;
+      padding: 10px 14px;
+      background: #18a0fb;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .button:hover {
+      background: #0d8ce8;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(24, 160, 251, 0.2);
+    }
+
+    .button:active {
+      background: #0a7dd1;
+      transform: translateY(0);
+    }
+
+    .button:disabled {
+      background: #e0e0e0;
+      color: #999999;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .button-main {
+      padding: 16px 18px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 0;
+      flex: 1;
+      /* height: 100px; */
+      /* min-height: 100px; */
+      background: linear-gradient(135deg, #18a0fb 0%, #0d8ce8 100%);
+      box-shadow: 0 2px 8px rgba(24, 160, 251, 0.25);
+    }
+
+    .button-main:hover {
+      background: linear-gradient(135deg, #0d8ce8 0%, #0a7dd1 100%);
+      box-shadow: 0 4px 12px rgba(24, 160, 251, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .button-secondary {
+      background: #ffffff;
+      color: #18a0fb;
+      border: 1.5px solid #18a0fb;
+    }
+
+    .button-secondary:hover {
+      background: #f0f8ff;
+      border-color: #0d8ce8;
+    }
+
+    .button-add {
+      padding: 14px 16px;
+      font-size: 13px;
+      background: #7b68ee;
+      color: #ffffff;
+    }
+
+    .button-add:hover {
+      background: #6a5acd;
+    }
+
+    .button-add:disabled {
+      background: #e0e0e0;
+      color: #999999;
+    }
+
+    .button-main.enabled {
+      background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    }
+
+    .button-main.enabled:hover {
+      background: linear-gradient(135deg, #6ee7b7 0%, #34d399 100%);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
+    }
+
+    .button-main.disabled {
+      background: #4b5563;
+      box-shadow: none;
+    }
+
+    .button-main.disabled:hover {
+      background: #4b5563;
+      box-shadow: none;
+      transform: none;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      height: 8px;
+      background: #e0e0e0;
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #7b68ee;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      box-shadow: 0 2px 4px rgba(123, 104, 238, 0.3);
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #6a5acd;
+      box-shadow: 0 2px 6px rgba(123, 104, 238, 0.4);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: #7b68ee;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s ease;
+      box-shadow: 0 2px 4px rgba(123, 104, 238, 0.3);
+    }
+
+    input[type="range"]::-moz-range-thumb:hover {
+      background: #6a5acd;
+      box-shadow: 0 2px 6px rgba(123, 104, 238, 0.4);
+    }
+
+    .file-label {
+      display: block;
+      padding: 8px 14px;
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 6px;
+      transition: all 0.15s ease;
+      color: #666666;
+      font-weight: 500;
+    }
+
+    .file-label:hover {
+      border-color: #18a0fb;
+      background: #f8f9fa;
+      color: #18a0fb;
+    }
+
+    .file-label.loaded {
+      background: #f0f9ff;
+      border-color: #7b68ee;
+      color: #7b68ee;
+    }
+
+    .file-label.loaded:hover {
+      background: #e0f2fe;
+      border-color: #6a5acd;
+    }
+
+    .file-info {
+      font-size: 10px;
+      color: #666666;
+      margin-bottom: 6px;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    .status-loading {
+      color: #18a0fb;
+      font-weight: 500;
+    }
+
+    .status-success {
+      color: #10b981;
+      font-weight: 500;
+    }
+
+    .status-error {
+      color: #ef4444;
+      font-weight: 500;
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+
+    .status-indicator.loading {
+      background: #18a0fb;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .status-indicator.success {
+      background: #10b981;
+    }
+
+    .status-indicator.error {
+      background: #ef4444;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .section {
+      margin-bottom: 12px;
+    }
+
+    .section-secondary {
+      margin-bottom: 8px;
+    }
+
+    .section-main {
+      /* flex: 1; */
+      padding-bottom: 8px;
+      min-height: 120px;
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      margin-bottom: 0;
+    }
+
+    .collapse-button {
+      width: 100%;
+      height: 16px;
+      padding: 0;
+      background: #e5e5e5;
+      border: none;
+      cursor: pointer;
+      font-size: 9px;
+      color: #666666;
+      text-align: center;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+      margin-top: 5px;
+      margin-bottom: 8px;
+      line-height: 16px;
+      font-weight: 500;
+    }
+
+    .collapse-button:hover {
+      background: #d0d0d0;
+      color: #333333;
+    }
+
+    .collapsed .section-secondary {
+      display: none;
+    }
+
+    .collapsed .section-main {
+      margin-bottom: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Кнопка сворачивания -->
+  <button class="collapse-button" id="collapse-btn">Свернуть</button>
+
+  <!-- Загрузка изображения указки -->
+  <div class="section-secondary">
+    <div class="file-info" id="pointer-info">
+      <span class="status-indicator loading"></span>
+      <span class="status-loading">Загрузка...</span>
+    </div>
+  </div>
+
+  <!-- Загрузка звука -->
+  <div class="section-secondary">
+    <div class="file-info" id="sound-info">
+      <span class="status-indicator loading"></span>
+      <span class="status-loading">Загрузка...</span>
+    </div>
+    <div style="margin-top: 10px;">
+      <input type="range" id="volume-control" min="0" max="100" value="100" style="width: 100%; margin-bottom: 4px;" />
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <label for="volume-control"
+          style="font-size: 10px; color: #666666; font-weight: 500; margin: 0;">Громкость:</label>
+        <div style="font-size: 10px; color: #666666; font-weight: 500; margin: 0;">
+          <span id="volume-value">100%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Добавление указки -->
+  <div class="section-secondary">
+    <button class="button button-add" id="add-pointer-btn" disabled>Добавить указку</button>
+  </div>
+
+  <!-- Анимация клика -->
+  <div class="section-main" style="">
+    <button class="button button-main disabled" id="click-animation-btn" disabled>
+      Клик
+    </button>
+    <div id="selection-message"
+      style="display: none; color: #ef4444; font-size: 12px; text-align: center; margin-top: 8px; font-weight: 500;">
+      Выберите указку
+    </div>
+  </div>
+
+  <script>
+    // Глобальные переменные
+    let pointerImageBytes = null;
+    let soundBytes = null;
+    let audioElement = null;
+    let pointerAddedToCanvas = false; // Флаг, что указка добавлена на Canvas
+    let volumeLevel = 1.0; // Уровень громкости от 0 до 1
+    let isCollapsed = false; // Состояние сворачивания окна
+
+    // Проверка наличия интернета
+    function checkInternetConnection() {
+      return navigator.onLine;
+    }
+
+    // Обновление состояния загрузки звука
+    function updateSoundStatus(status, message) {
+      const soundInfo = document.getElementById('sound-info');
+      const indicator = soundInfo.querySelector('.status-indicator');
+      const text = soundInfo.querySelector('span:last-child');
+
+      // Удаляем все классы статуса
+      indicator.classList.remove('loading', 'success', 'error');
+      text.classList.remove('status-loading', 'status-success', 'status-error');
+
+      if (status === 'loading') {
+        indicator.classList.add('loading');
+        text.classList.add('status-loading');
+        text.textContent = message || 'Загрузка звука...';
+      } else if (status === 'success') {
+        indicator.classList.add('success');
+        text.classList.add('status-success');
+        text.textContent = message || 'Звук загружен';
+      } else if (status === 'error') {
+        indicator.classList.add('error');
+        text.classList.add('status-error');
+        text.textContent = message || 'Ошибка загрузки звука';
+      }
+    }
+
+    // Обновление состояния загрузки изображения
+    function updatePointerStatus(status, message) {
+      const pointerInfo = document.getElementById('pointer-info');
+      const indicator = pointerInfo.querySelector('.status-indicator');
+      const text = pointerInfo.querySelector('span:last-child');
+
+      // Удаляем все классы статуса
+      indicator.classList.remove('loading', 'success', 'error');
+      text.classList.remove('status-loading', 'status-success', 'status-error');
+
+      if (status === 'loading') {
+        indicator.classList.add('loading');
+        text.classList.add('status-loading');
+        text.textContent = message || 'Загрузка изображения...';
+      } else if (status === 'success') {
+        indicator.classList.add('success');
+        text.classList.add('status-success');
+        text.textContent = message || 'Изображение загружено';
+      } else if (status === 'error') {
+        indicator.classList.add('error');
+        text.classList.add('status-error');
+        text.textContent = message || 'Ошибка загрузки изображения';
+      }
+    }
+
+    // Загрузка звука с API
+    async function loadSound() {
+      try {
+        // Проверка интернета
+        if (!checkInternetConnection()) {
+          updateSoundStatus('error', 'Нет интернета');
+          updateClickButtonState();
+          return;
+        }
+
+        updateSoundStatus('loading', 'Загрузка звука...');
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // Таймаут 10 секунд
+
+        const response = await fetch('https://denissiobarkani.github.io/figma-media-assets/audio/click2.mp3', {
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        soundBytes = bytes;
+
+        // Создаём Audio элемент для проигрывания
+        const blob = new Blob([bytes], { type: 'audio/mpeg' });
+        const url = URL.createObjectURL(blob);
+        audioElement = new Audio(url);
+        audioElement.volume = volumeLevel; // Устанавливаем громкость
+
+        updateSoundStatus('success', 'Звук загружен');
+        updateClickButtonState(); // Обновляем состояние кнопки при загрузке звука
+        console.log('Звук загружен с API');
+      } catch (error) {
+        console.error('Ошибка загрузки звука:', error);
+        let errorMessage = 'Ошибка соединения';
+
+        if (!checkInternetConnection()) {
+          errorMessage = 'Нет интернета';
+        } else if (error.name === 'AbortError') {
+          errorMessage = 'Превышено время ожидания';
+        } else if (error.message && error.message.includes('Failed to fetch')) {
+          errorMessage = 'Ошибка соединения с сервером';
+        } else if (error.message && error.message.includes('HTTP error')) {
+          errorMessage = 'Ошибка загрузки файла';
+        } else if (error.message) {
+          errorMessage = 'Ошибка: ' + error.message;
+        }
+
+        updateSoundStatus('error', errorMessage);
+        updateClickButtonState();
+      }
+    }
+
+    // Функция обновления состояния кнопки анимации
+    function updateClickButtonState() {
+      const clickBtn = document.getElementById('click-animation-btn');
+      // Кнопка зеленая только когда есть изображение И звук
+      if (pointerAddedToCanvas && soundBytes) {
+        clickBtn.classList.remove('disabled');
+        clickBtn.classList.add('enabled');
+      } else {
+        clickBtn.classList.remove('enabled');
+        clickBtn.classList.add('disabled');
+      }
+    }
+
+    // Загрузка изображения с API
+    async function loadBuiltInPointer() {
+      try {
+        // Проверка интернета
+        if (!checkInternetConnection()) {
+          updatePointerStatus('error', 'Нет интернета');
+          updateClickButtonState();
+          return;
+        }
+
+        updatePointerStatus('loading', 'Загрузка изображения...');
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 10000); // Таймаут 10 секунд
+
+        const response = await fetch('https://denissiobarkani.github.io/figma-media-assets/images/pointer.png', {
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const arrayBuffer = await response.arrayBuffer();
+        pointerImageBytes = new Uint8Array(arrayBuffer);
+        document.getElementById('add-pointer-btn').disabled = false;
+        updatePointerStatus('success', 'Изображение загружено');
+        updateClickButtonState();
+        console.log('Изображение указки загружено с API');
+      } catch (error) {
+        console.error('Ошибка загрузки изображения с API:', error);
+        let errorMessage = 'Ошибка соединения';
+
+        if (!checkInternetConnection()) {
+          errorMessage = 'Нет интернета';
+        } else if (error.name === 'AbortError') {
+          errorMessage = 'Превышено время ожидания';
+        } else if (error.message && error.message.includes('Failed to fetch')) {
+          errorMessage = 'Ошибка соединения с сервером';
+        } else if (error.message && error.message.includes('HTTP error')) {
+          errorMessage = 'Ошибка загрузки файла';
+        } else if (error.message) {
+          errorMessage = 'Ошибка: ' + error.message;
+        }
+
+        updatePointerStatus('error', errorMessage);
+        document.getElementById('add-pointer-btn').disabled = true;
+        updateClickButtonState();
+      }
+    }
+
+    // Кнопка добавления указки
+    document.getElementById('add-pointer-btn').addEventListener('click', () => {
+      if (pointerImageBytes) {
+        pointerAddedToCanvas = true;
+        updateClickButtonState();
+        window.parent.postMessage({
+          pluginMessage: {
+            type: 'add-pointer',
+            imageBytes: Array.from(pointerImageBytes)
+          }
+        }, '*');
+      }
+    });
+
+    // Регулятор громкости
+    const volumeControl = document.getElementById('volume-control');
+    const volumeValue = document.getElementById('volume-value');
+
+    volumeControl.addEventListener('input', (e) => {
+      volumeLevel = e.target.value / 100; // Преобразуем из 0-100 в 0-1
+      volumeValue.textContent = e.target.value + '%';
+
+      // Применяем громкость к текущему аудио элементу
+      if (audioElement) {
+        audioElement.volume = volumeLevel;
+      }
+    });
+
+    // Кнопка анимации клика
+    document.getElementById('click-animation-btn').addEventListener('click', () => {
+      // Проигрываем звук
+      if (audioElement) {
+        audioElement.currentTime = 0;
+        audioElement.volume = volumeLevel; // Устанавливаем текущую громкость
+        audioElement.play().catch(err => console.error('Ошибка проигрывания звука:', err));
+      }
+
+      // Отправляем команду на анимацию
+      window.parent.postMessage({
+        pluginMessage: {
+          type: 'click-animation'
+        }
+      }, '*');
+    });
+
+    // Обработка команды анимации от code.ts
+    window.addEventListener('message', (event) => {
+      if (event.data.pluginMessage && event.data.pluginMessage.type === 'animate-click') {
+        const { nodeId, originalWidth, originalHeight, originalX, originalY, originalRotation } = event.data.pluginMessage;
+        animateClick(nodeId, originalWidth, originalHeight, originalX, originalY, originalRotation);
+      }
+    });
+
+    // Функция анимации клика с задержками
+    // Конфигурация анимации - быстрая и резкая (0.2 секунды)
+    const ANIMATION_CONFIG = {
+      steps: 6,            // Мало шагов = быстрее
+      minScale: 0.92,      // Уменьшение (уменьшено на 50%)
+      maxScale: 1.08,      // Увеличение (уменьшено на 50%)
+      shrinkPhase: 0.2,    // Быстрое уменьшение
+      growPhase: 0.3,      // Быстрое увеличение
+      returnPhase: 0.5,    // Быстрый возврат
+      frameDelay: 8,       // Маленькая задержка = быстрее
+      // Варианты якоря для масштабирования:
+      // anchorX: 0.5, anchorY: 0.5 - центр элемента (масштабирование от центра, как Alt)
+      // anchorX: 1.0, anchorY: 0.5 - правый край (масштабирование от правой стороны, как Shift влево)
+      // anchorX: 0.5, anchorY: 1.0 - нижняя часть (для указки - точка указания)
+      // anchorX: 0.5, anchorY: 0.0 - верхняя часть
+      anchorX: 0,        // Позиция якоря по X (0.0 = лево, 0.5 = центр, 1.0 = право) - правый край для Shift влево
+      anchorY: 0         // Позиция якоря по Y (0.0 = верх, 0.5 = центр, 1.0 = низ) - центр по вертикали
+    };
+
+    function animateClick(nodeId, originalWidth, originalHeight, originalX, originalY, originalRotation) {
+      // Валидация входных параметров
+      originalRotation = originalRotation || 0;
+      if (isNaN(originalRotation) || !isFinite(originalRotation)) {
+        originalRotation = 0;
+      }
+      if (isNaN(originalX) || !isFinite(originalX)) {
+        originalX = 0;
+      }
+      if (isNaN(originalY) || !isFinite(originalY)) {
+        originalY = 0;
+      }
+      if (isNaN(originalWidth) || !isFinite(originalWidth) || originalWidth <= 0) {
+        originalWidth = 200;
+      }
+      if (isNaN(originalHeight) || !isFinite(originalHeight) || originalHeight <= 0) {
+        originalHeight = 200;
+      }
+
+      const steps = ANIMATION_CONFIG.steps;
+      const minScale = ANIMATION_CONFIG.minScale;
+      const maxScale = ANIMATION_CONFIG.maxScale;
+      const shrinkPhase = ANIMATION_CONFIG.shrinkPhase;
+      const growPhase = ANIMATION_CONFIG.growPhase;
+      const returnPhase = ANIMATION_CONFIG.returnPhase;
+      const frameDelay = ANIMATION_CONFIG.frameDelay;
+
+      let step = 0;
+      let lastTime = performance.now();
+
+      function animate(currentTime) {
+        if (step > steps) {
+          // Возвращаем исходный размер и позицию
+          window.parent.postMessage({
+            pluginMessage: {
+              type: 'set-node-size',
+              nodeId: nodeId,
+              width: originalWidth,
+              height: originalHeight,
+              x: originalX,
+              y: originalY
+            }
+          }, '*');
+          return;
+        }
+
+        // Ограничиваем частоту обновлений
+        if (currentTime - lastTime < frameDelay) {
+          requestAnimationFrame(animate);
+          return;
+        }
+        lastTime = currentTime;
+
+        const progress = step / steps;
+        let scale;
+
+        // Линейная анимация без easing для резкости
+        if (progress < shrinkPhase) {
+          // Фаза уменьшения - линейно
+          const localProgress = progress / shrinkPhase;
+          scale = 1 - localProgress * (1 - minScale);
+        } else if (progress < shrinkPhase + growPhase) {
+          // Фаза увеличения - линейно
+          const localProgress = (progress - shrinkPhase) / growPhase;
+          scale = minScale + localProgress * (maxScale - minScale);
+        } else {
+          // Фаза возврата - линейно
+          const localProgress = (progress - shrinkPhase - growPhase) / returnPhase;
+          scale = maxScale - localProgress * (maxScale - 1);
+        }
+
+        const newWidth = originalWidth * scale;
+        const newHeight = originalHeight * scale;
+
+        // Масштабирование от центра (как при зажатом Alt в Figma)
+        // Учитываем поворот элемента для правильного расчета позиции центра
+        const anchorX = ANIMATION_CONFIG.anchorX;
+        const anchorY = ANIMATION_CONFIG.anchorY;
+
+        // Локальная позиция центра относительно точки поворота (x, y)
+        // В Figma точка поворота - это левый верхний угол до поворота
+        const localCenterX = originalWidth * anchorX;
+        const localCenterY = originalHeight * anchorY;
+
+        // Преобразуем локальную позицию центра в глобальные координаты с учетом поворота
+        // В Figma поворот происходит по часовой стрелке (положительный угол)
+        const cos = Math.cos(-originalRotation); // Используем отрицательный угол для поворота против часовой
+        const sin = Math.sin(-originalRotation);
+
+        // Глобальная позиция центра в исходном элементе
+        // Поворачиваем локальный вектор центра вокруг точки (0, 0) и добавляем позицию элемента
+        const globalCenterX = originalX + localCenterX * cos - localCenterY * sin;
+        const globalCenterY = originalY + localCenterX * sin + localCenterY * cos;
+
+        // Локальная позиция центра в новом элементе
+        const newLocalCenterX = newWidth * anchorX;
+        const newLocalCenterY = newHeight * anchorY;
+
+        // Вычисляем новую позицию точки поворота (x, y) так, чтобы центр остался на месте
+        // Обратное преобразование: вычитаем повернутый локальный вектор центра из глобального центра
+        let newX = globalCenterX - (newLocalCenterX * cos - newLocalCenterY * sin);
+        let newY = globalCenterY - (newLocalCenterX * sin + newLocalCenterY * cos);
+
+        // Проверяем на валидность и исправляем если нужно
+        if (isNaN(newX) || !isFinite(newX)) {
+          newX = originalX;
+        }
+        if (isNaN(newY) || !isFinite(newY)) {
+          newY = originalY;
+        }
+        if (isNaN(newWidth) || !isFinite(newWidth) || newWidth <= 0) {
+          newWidth = originalWidth;
+        }
+        if (isNaN(newHeight) || !isFinite(newHeight) || newHeight <= 0) {
+          newHeight = originalHeight;
+        }
+
+        window.parent.postMessage({
+          pluginMessage: {
+            type: 'set-node-size',
+            nodeId: nodeId,
+            width: newWidth,
+            height: newHeight,
+            x: newX,
+            y: newY
+          }
+        }, '*');
+
+        step++;
+        requestAnimationFrame(animate);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // Обработка команды анимации вращения от code.ts
+    window.addEventListener('message', (event) => {
+      if (event.data.pluginMessage && event.data.pluginMessage.type === 'animate-rotate') {
+        const { nodeId, originalRotation, duration, returnToOriginal } = event.data.pluginMessage;
+        animateRotate(nodeId, originalRotation, duration, returnToOriginal);
+      }
+    });
+
+    // Функция анимации вращения с bounce эффектом (как в CS:GO)
+    function animateRotate(nodeId, originalRotation, duration, returnToOriginal) {
+      const startTime = performance.now();
+      const targetRotation = originalRotation + Math.PI * 2; // 360 градусов
+
+      // Easing функция для резкого вращения с эффектом подбрасывания (как нож в CS:GO)
+      // Резкое начало, быстрое вращение, замедление в конце с небольшим отскоком
+      function easeOutBounce(t) {
+        // Более резкий эффект для CS:GO стиля
+        if (t < 0.7) {
+          // Быстрое вращение в начале (70% времени)
+          return t * t * (2.5 - 1.5 * t);
+        } else {
+          // Замедление с небольшим отскоком в конце
+          const x = (t - 0.7) / 0.3;
+          return 0.7 + 0.3 * (1 - Math.pow(1 - x, 3)) + 0.05 * Math.sin(x * Math.PI * 2);
+        }
+      }
+
+      function animate(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        if (progress >= 1) {
+          // Завершаем анимацию
+          window.parent.postMessage({
+            pluginMessage: {
+              type: 'set-node-rotation',
+              nodeId: nodeId,
+              rotation: targetRotation
+            }
+          }, '*');
+
+          // Возвращаем исходное вращение если нужно
+          if (returnToOriginal) {
+            setTimeout(() => {
+              window.parent.postMessage({
+                pluginMessage: {
+                  type: 'set-node-rotation',
+                  nodeId: nodeId,
+                  rotation: originalRotation
+                }
+              }, '*');
+            }, 100);
+          }
+          return;
+        }
+
+        // Применяем easing функцию для bounce эффекта
+        const easedProgress = easeOutBounce(progress);
+        const rotation = originalRotation + easedProgress * Math.PI * 2;
+
+        window.parent.postMessage({
+          pluginMessage: {
+            type: 'set-node-rotation',
+            nodeId: nodeId,
+            rotation: rotation
+          }
+        }, '*');
+
+        requestAnimationFrame(animate);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    // Обновление состояния кнопок при изменении выделения
+    window.addEventListener('message', (event) => {
+      if (event.data.pluginMessage && event.data.pluginMessage.type === 'selection-changed') {
+        const hasSelection = event.data.pluginMessage.hasSelection;
+        const clickBtn = document.getElementById('click-animation-btn');
+        const selectionMessage = document.getElementById('selection-message');
+        clickBtn.disabled = !hasSelection;
+
+        // Показываем/скрываем сообщение о выборе указки
+        if (!hasSelection) {
+          selectionMessage.style.display = 'block';
+        } else {
+          selectionMessage.style.display = 'none';
+        }
+
+        updateClickButtonState();
+
+        // Обновляем размер окна с учетом надписи
+        // setTimeout(() => {
+        //   if (isCollapsed) {
+        //     // Свернутое состояние
+        //     const baseHeight = 150;
+        //     const additionalHeight = (!hasSelection) ? 20 : 0;
+        //     window.parent.postMessage({
+        //       pluginMessage: {
+        //         type: 'resize-ui',
+        //         width: 240,
+        //         height: baseHeight + additionalHeight
+        //       }
+        //     }, '*');
+        //   } else {
+        //     // Развернутое состояние
+        //     const baseHeight = body.scrollHeight || body.offsetHeight;
+        //     const additionalHeight = (!hasSelection) ? 20 : 0;
+        //     window.parent.postMessage({
+        //       pluginMessage: {
+        //         type: 'resize-ui',
+        //         width: 240,
+        //         height: baseHeight + additionalHeight
+        //       }
+        //     }, '*');
+        //   }
+        // }, 50);
+      }
+    });
+
+    // Кнопка сворачивания
+    document.getElementById('collapse-btn').addEventListener('click', () => {
+      isCollapsed = !isCollapsed;
+      const body = document.body;
+      const collapseBtn = document.getElementById('collapse-btn');
+
+      if (isCollapsed) {
+        // Сначала изменяем размер окна
+        const selectionMessage = document.getElementById('selection-message');
+        const baseHeight = 150;
+        const additionalHeight = (selectionMessage && selectionMessage.style.display !== 'none') ? 20 : 0;
+        
+        window.parent.postMessage({
+          pluginMessage: {
+            type: 'resize-ui',
+            width: 240,
+            height: baseHeight + additionalHeight
+          }
+        }, '*');
+        
+        // Затем скрываем элементы после изменения размера
+        requestAnimationFrame(() => {
+          body.classList.add('collapsed');
+          collapseBtn.textContent = 'Развернуть';
+        });
+      } else {
+        // Сначала показываем элементы
+        body.classList.remove('collapsed');
+        collapseBtn.textContent = 'Свернуть';
+        
+        // Ждем обновления DOM и затем изменяем размер
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            const baseHeight = body.scrollHeight || body.offsetHeight;
+            const selectionMessage = document.getElementById('selection-message');
+            const additionalHeight = (selectionMessage && selectionMessage.style.display !== 'none') ? 20 : 0;
+            
+            window.parent.postMessage({
+              pluginMessage: {
+                type: 'resize-ui',
+                width: 240,
+                height: baseHeight + additionalHeight
+              }
+            }, '*');
+          });
+        });
+      }
+    });
+
+    // Обработчики событий для отслеживания состояния интернета
+    window.addEventListener('online', () => {
+      console.log('Интернет восстановлен');
+      // Перезагружаем ресурсы при восстановлении соединения
+      if (!pointerImageBytes) {
+        loadBuiltInPointer();
+      }
+      if (!soundBytes) {
+        loadSound();
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      console.log('Интернет отключен');
+      if (!pointerImageBytes) {
+        updatePointerStatus('error', 'Нет интернета');
+      }
+      if (!soundBytes) {
+        updateSoundStatus('error', 'Нет интернета');
+      }
+      updateClickButtonState();
+    });
+
+    // Инициализация
+    window.addEventListener('load', () => {
+      loadBuiltInPointer();
+      loadSound(); // Загружаем звук с API
+      updateClickButtonState(); // Обновляем состояние кнопки при загрузке
+
+      // Показываем сообщение если ничего не выбрано при загрузке
+      const selectionMessage = document.getElementById('selection-message');
+      const clickBtn = document.getElementById('click-animation-btn');
+      if (clickBtn.disabled) {
+        selectionMessage.style.display = 'block';
+      }
+
+      // Устанавливаем начальную высоту окна с учетом надписи
+      // setTimeout(() => {
+      //   const baseHeight = body.scrollHeight || body.offsetHeight;
+      //   const additionalHeight = (selectionMessage && selectionMessage.style.display !== 'none') ? 20 : 0;
+      //   window.parent.postMessage({
+      //     pluginMessage: {
+      //       type: 'resize-ui',
+      //       width: 240,
+      //       height: baseHeight + additionalHeight
+      //     }
+      //   }, '*');
+      // }, 100);
+    });
+  </script>
+</body>
+
+</html>

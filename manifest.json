@@ -1,0 +1,14 @@
+{
+  "name": "Указка",
+  "id": "ukazka-plugin",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["https://denissiobarkani.github.io"]
+  },
+  "permissions": []
+}
+
+
