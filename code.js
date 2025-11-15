@@ -38,32 +38,16 @@ async function addPointerToCanvas(imageBytes) {
     try {
         // Создаём изображение из байтов
         const imagePaint = createImageFromBytes(imageBytes);
-        // Получаем хеш изображения
-        const imageHash = imagePaint.imageHash;
-        // Проверяем, что imageHash не null
-        if (!imageHash) {
-            throw new Error("Не удалось получить хеш изображения");
-        }
-        // Получаем размеры изображения
-        // Используем известные размеры изображения pointer.png
-        // Замените на реальные размеры вашего изображения
-        let imageWidth = 200;
-        let imageHeight = 200;
-        const aspectRatio = imageWidth / imageHeight;
-        // Создаём Frame для указки с правильным соотношением сторон
+        // Создаём Frame для указки
         const pointerFrame = figma.createFrame();
         pointerFrame.name = "Указка";
-        // Устанавливаем размер с сохранением пропорций
-        const defaultSize = 200;
-        const width = defaultSize;
-        const height = defaultSize / aspectRatio;
-        pointerFrame.resize(width, height);
+        pointerFrame.resize(200, 200); // Размер по умолчанию, пользователь может изменить
         // Применяем изображение как фон
         pointerFrame.fills = [imagePaint];
         // Размещаем в центре viewport
         const viewport = figma.viewport.center;
-        pointerFrame.x = viewport.x - width / 2;
-        pointerFrame.y = viewport.y - height / 2;
+        pointerFrame.x = viewport.x - 100;
+        pointerFrame.y = viewport.y - 100;
         // Добавляем на текущую страницу
         figma.currentPage.appendChild(pointerFrame);
         // Создаём Component из Frame
@@ -73,18 +57,6 @@ async function addPointerToCanvas(imageBytes) {
         component.fills = pointerFrame.fills;
         component.x = pointerFrame.x;
         component.y = pointerFrame.y;
-        // Пытаемся установить targetAspectRatio (новый способ в API v1.107+)
-        // Это может помочь сохранить пропорции
-        try {
-            // @ts-ignore
-            if ('targetAspectRatio' in component) {
-                component.targetAspectRatio = aspectRatio;
-            }
-        }
-        catch (e) {
-            // Игнорируем ошибку, если свойство недоступно
-            console.log('targetAspectRatio не доступно:', e);
-        }
         // Удаляем старый Frame и добавляем Component
         pointerFrame.remove();
         figma.currentPage.appendChild(component);
