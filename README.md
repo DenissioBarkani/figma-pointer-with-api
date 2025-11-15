@@ -40,7 +40,7 @@
 1. Клонируйте репозиторий:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/DenissioBarkani/figma-pointer-with-api.git
 cd figmapluginApi
 ```
 
